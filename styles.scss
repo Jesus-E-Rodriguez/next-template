@@ -1,0 +1,811 @@
+//
+// Mixins and functions
+//
+@mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
+  $min: breakpoint-min($name, $breakpoints);
+  @if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+@function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
+  $min: map-get($breakpoints, $name);
+  @return if($min != 0, $min, null);
+}
+
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+@mixin map-iterator($map, $key) {
+  $values: map-get($map, $key);
+
+  @each $property, $value in $values {
+    #{$property}: $value;
+  }
+}
+
+//
+// Variables
+//
+@import url('https://fonts.googleapis.com/css?family=Merriweather:300');
+
+$white: #ffffff;
+$faded: rgba(254, 254, 251, 0.6);
+$primary: #01c7ab;
+$info: #1162bd;
+$success: #9947d0;
+$warning: #ed856a;
+$danger: #b1467c;
+$dark: #161739;
+$purple: #251b48;
+
+$colors: (
+  white: $white,
+  primary: $primary,
+  info: $info,
+  success: $success,
+  warning: $warning,
+  danger: $danger,
+  dark: $dark
+);
+
+$section-colors: (
+  section-1: $purple,
+  section-2: #181a4a,
+  section-3: $dark,
+  section-4: $info,
+  section-5: $purple,
+  section-6: $dark
+);
+
+$image-props: (
+  section-1: (
+    height: 518px,
+    top: -26vw
+  ),
+  section-2: (
+    height: 184px,
+    top: -9vw
+  ),
+  section-3: (
+    height: 510px,
+    top: -1px
+  ),
+  section-4: (
+    height: 318px,
+    top: -16vw
+  ),
+  section-5: (
+    height: 91px,
+    top: -1px
+  ),
+  section-6: (
+    height: 59px,
+    top: -1px
+  )
+);
+
+$serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+  Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+// Font map
+$fonts: (
+  font-family--heading: $serif,
+  font-family--body: #{'Merriweather',
+  serif}
+);
+
+// Responsive font sizes
+$base-font-size: 1rem;
+$base-font-sm-size: 0.995rem;
+$base-font-xs-size: 0.875rem;
+
+// Line-Height
+$base-line-height: 1.5;
+$header-line-height: 1.25;
+
+// Font sizes for headings
+$headings: (
+  font-size--h1: 2.5rem,
+  font-size--h2: 2rem,
+  font-size--h3: 1.75rem,
+  font-size--h4: 1.5rem,
+  font-size--h5: 1.25rem,
+  font-size--h6: 1rem
+);
+
+// Breakpoints
+$xxsmall: 20rem; // 320px
+$xsmall: 36rem; // 576px
+$small: 48rem; // 768px
+$medium: 64rem; // 1024px
+$large: 85.375rem; // 1366px
+$xlarge: 120rem; // 1920px
+$xxlarge: 160rem; // 2560px
+
+// Grid breakpoints for easy media queries
+$grid-breakpoints: (
+  xxxs: 0,
+  xxs: $xxsmall,
+  xs: $xsmall,
+  sm: $small,
+  md: $medium,
+  lg: $large,
+  xl: $xlarge,
+  xxl: $xxlarge
+);
+
+//
+// General reset
+//
+/**
+ * Set the way the browser calculates margins and padding to border-box instead
+ * of content-box.
+ */
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+/**
+ * 1. Correct the line height in all browsers.
+ * 2. Prevent adjustments of font size after orientation changes in
+ *    IE on Windows Phone and in iOS.
+ */
+
+html {
+  line-height: 1.15;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+/**
+ * Remove the margin in all browsers and set default styling
+ */
+
+body {
+  margin: 0;
+  padding: 0;
+  color: $white;
+  background-color: $dark;
+  font-size: $base-font-xs-size;
+  line-height: $base-line-height;
+  font-family: map-get($fonts, 'font-family--body');
+  overflow-x: hidden;
+
+  @include media-breakpoint-up(xs) {
+    font-size: $base-font-sm-size;
+  }
+  @include media-breakpoint-up(sm) {
+    font-size: $base-font-size;
+  }
+  @include media-breakpoint-up(md) {
+    font-size: $base-font-size * 1.2;
+    line-height: $base-line-height * 1.2;
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: $base-font-size * 1.2;
+    line-height: $base-line-height * 1.2;
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: $base-font-size * 1.2;
+    line-height: $base-line-height * 1.2;
+  }
+  @include media-breakpoint-up(xxl) {
+    font-size: $base-font-size * 1.2;
+    line-height: $base-line-height * 1.2;
+  }
+}
+
+/**
+ * Contol default styling with default fallbacks
+ */
+@for $i from 1 through 6 {
+  h#{$i} {
+    font-size: map-get($headings, 'font-size--h#{$i}');
+    line-height: $header-line-height;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+p {
+  color: $faded;
+}
+
+//
+// Layout classes
+//
+.container {
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin: 0 4%;
+
+  @include media-breakpoint-up(md) {
+    margin: 0 8%;
+  }
+
+  @include media-breakpoint-up(lg) {
+    margin: 0 12%;
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin: 0 18%;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: 1rem;
+
+  @for $i from 1 through 12 {
+    .grid-col-#{$i} {
+      grid-column: span $i;
+    }
+  }
+
+  @include media-breakpoint-up(sm) {
+    @for $i from 1 through 12 {
+      .grid-col-sm-#{$i} {
+        grid-column: span $i;
+      }
+    }
+
+    @include media-breakpoint-up(md) {
+      @for $i from 1 through 12 {
+        .grid-col-md-#{$i} {
+          grid-column: span $i;
+        }
+      }
+    }
+
+    @include media-breakpoint-up(lg) {
+      @for $i from 1 through 12 {
+        .grid-col-lg-#{$i} {
+          grid-column: span $i;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Generic default styling classes
+ */
+.d-block {
+  display: block;
+}
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.align-items-end {
+  align-items: end;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+//
+// Style classes
+//
+
+button,
+.btn {
+  cursor: pointer;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-bold {
+  font-weight: 900;
+}
+
+.text-header {
+  font-family: map-get($fonts, 'font-family--heading');
+  font-size: 2.5rem;
+  font-weight: 300;
+  text-transform: capitalize;
+  letter-spacing: 1px;
+  margin-bottom: 2rem;
+  position: relative;
+
+  @include media-breakpoint-up(md) {
+    font-size: 5rem;
+  }
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -1rem;
+    @include size(5rem, 1px);
+    background-color: $primary;
+  }
+}
+
+.text-subheader {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.mt {
+  &-1 {
+    margin-top: 1rem;
+  }
+  &-15vh {
+    margin-top: 15vh;
+  }
+}
+
+.btn {
+  font-size: 1.05rem;
+  font-weight: 300;
+  padding: 0.8rem 3.3rem;
+  margin: 1.5625rem 0 0;
+  border-radius: 50px;
+  text-align: center;
+  display: inline-block;
+  transition: all 0.3s ease;
+  background-color: transparent;
+  text-decoration: none;
+  font-family: map-get($fonts, 'font-family--heading');
+  font-weight: 600;
+}
+
+@each $property, $value in $colors {
+  .btn-outline-#{$property} {
+    border: 1px solid $value;
+    color: $value;
+
+    &:hover {
+      box-shadow: 0 0 10px 2px $value;
+    }
+  }
+
+  .text-#{$property} {
+    color: $value;
+  }
+}
+
+.name {
+  font-family: map-get($fonts, 'font-family--heading');
+  font-size: 1rem;
+  font-weight: 100;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 4;
+
+  @include media-breakpoint-up(md) {
+    font-size: 1.5rem;
+  }
+}
+
+.main-heading {
+  font-family: map-get($fonts, 'font-family--heading');
+  font-size: 3.5rem;
+  line-height: 1.2;
+  font-weight: 300;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+
+  @include media-breakpoint-up(md) {
+    font-size: 4.5rem;
+  }
+}
+
+.menu-button {
+  display: block;
+  cursor: pointer;
+  background: transparent;
+  position: relative;
+  @include size(35px);
+  padding: 1rem;
+  border: 0;
+  outline: none;
+  z-index: 4;
+}
+
+.menu-button span,
+.menu-button span::before,
+.menu-button span::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 3px;
+  background-color: #fafafa;
+  transition: 500ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.menu-button span {
+  position: relative;
+  display: block;
+  transform: translate(-50%, -50%);
+}
+
+.menu-button span::before {
+  top: -8px;
+}
+
+.menu-button span::after {
+  top: 8px;
+}
+
+.menu-button:hover > span,
+.menu-button:hover > span::before,
+.menu-button:hover > span::after {
+  background-color: $primary;
+}
+
+.menu-button.active > span {
+  background-color: transparent;
+}
+
+.menu-button.active > span::before {
+  transform: rotate(-225deg);
+  top: 0px;
+}
+
+.menu-button.active > span::after {
+  transform: rotate(225deg);
+  top: 0px;
+}
+
+.menu {
+  position: absolute;
+  top: -100%;
+  right: -100%;
+  //background: #0d0e2d;
+  background-color: $dark;
+  transition: 0.3s ease-in-out;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  @include size(100%, 100vh);
+  z-index: 3;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    li a {
+      font-size: 3rem;
+      text-decoration: none;
+      color: $primary;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.menu.active {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 0;
+}
+
+.iconbar {
+  display: flex;
+
+  &-horizontal {
+    > *:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
+
+  &-vertical {
+    flex-direction: column;
+    > *:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.circle {
+  @include size(50px);
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 50%;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include media-breakpoint-up(md) {
+    @include size(60px);
+    font-size: 1.2rem;
+  }
+
+  @each $property, $value in $colors {
+    &-#{$property} {
+      border-color: $value;
+      color: $value;
+
+      &:hover {
+        box-shadow: 0 0 10px 2px $value;
+      }
+    }
+  }
+}
+
+.bg-circle {
+  background-image: url('../images/circle.svg');
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: contain;
+
+  @include media-breakpoint-up(md) {
+    background-position: center;
+  }
+}
+
+//
+// Semantic classes
+//
+.header {
+  padding-top: 1rem;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(22, 23, 57, 1),
+    rgba(22, 23, 57, 0)
+  );
+}
+
+.section {
+  display: block;
+  width: 100%;
+  padding: 20vh 0;
+  position: relative;
+}
+
+.section-top {
+  &::before {
+    content: '';
+    display: block;
+    margin: 0;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: contain;
+    pointer-events: none;
+  }
+}
+
+//
+// ids
+//
+#canvas {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0px;
+  border: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+#section-2 {
+  background-image: url('../images/illustration-4.svg'),
+    url('../images/illustration-3.svg');
+  background-repeat: no-repeat, no-repeat;
+  background-position: left 55%, right 71%;
+  background-size: 43vmax, 100vmax;
+
+  @include media-breakpoint-up(md) {
+    background-position: -20% 90%, 126% center;
+    background-size: 35vmax, 64vmax;
+  }
+}
+
+#section-5 {
+  background-image: url('../images/illustration-8.svg');
+  background-repeat: no-repeat;
+  background-position: right 94%;
+  background-size: 66vmax;
+
+  @include media-breakpoint-up(md) {
+    background-position: right 90%;
+    background-size: 52vmax;
+  }
+}
+
+#section-6 {
+  background-image: url('../images/illustration-9.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 40vmax;
+
+  @include media-breakpoint-up(md) {
+    background-size: 50vmax;
+  }
+}
+
+#section-7 {
+  position: relative;
+  z-index: 1;
+  padding: 20vh 0 1rem;
+
+  &::before {
+    background-image: url('../images/section-1.svg');
+    background-position: bottom;
+    height: 518px;
+    bottom: 0;
+    z-index: -1;
+  }
+}
+
+@each $property, $value in $section-colors {
+  ##{$property} {
+    background-color: $value;
+
+    &::before {
+      @include map-iterator($image-props, #{$property});
+      background-image: url('../images/#{$property}.svg');
+    }
+  }
+}
+
+//
+// Project classes
+//
+.project {
+  margin-left: 5%;
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    background-repeat: no-repeat;
+    height: 250px;
+    width: 100%;
+    top: -135%;
+    left: -5%;
+    z-index: -1;
+  }
+}
+
+@for $i from 1 through 4 {
+  .project-#{$i}::before {
+    background-image: url('data:image/svg+xml, \
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">\
+      <style>\
+        .text {\
+          font-family: "Helvetica Neue", sans-serif;\
+          font-size: 95px;\
+          font-weight: bold;\
+          fill: white;\
+          opacity: 0.2;\
+        }\
+      </style>\
+      <text class="text" y="1em">0#{$i}</text> \
+      </svg>');
+  }
+}
+
+//
+// Form classes
+//
+.input-group {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.input {
+  font-family: map-get($fonts, 'font-family--heading');
+  display: block;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: transparent;
+  padding: 0.375rem 0.75rem;
+  outline: 0;
+  border: none;
+  border-radius: 0px;
+  border-bottom: 1px solid #fff;
+  transition: border-color 0.15s ease-in-out;
+
+  @each $color, $value in $colors {
+    &-#{$color} {
+      border-bottom: 1px solid $value;
+      color: $value;
+    }
+
+    &-#{$color}:focus,
+    &-#{$color}:active {
+      border-color: $value;
+    }
+  }
+
+  &:focus ~ .label-absolute,
+  &:valid ~ .label-absolute {
+    top: -1.1rem;
+    left: 0;
+    transform: scale(0.8);
+  }
+}
+
+.label-absolute {
+  font-family: map-get($fonts, 'font-family--heading');
+  position: absolute;
+  top: 0;
+  left: 0.8rem;
+  transition: all 0.5s ease-in-out;
+
+  @each $color, $value in $colors {
+    &-#{$color} {
+      color: $value;
+    }
+  }
+}
+
+.copy {
+  font-size: 0.8rem;
+}
